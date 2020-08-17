@@ -8,11 +8,12 @@ const logger = require('../logger');
 const notesService = require('./notesService');
 const xss = require('xss');
 
+var uniqid = require('uniqid');
+
 const serializeNote = note => ({
   id: note.id,
   name: xss(note.name),
-  modified: note.modified,
-  folderId: xss(note.folder_id),
+  
   content: xss(note.content)
 });
 
@@ -20,15 +21,15 @@ noteRouter
   .route('/api/notes')
   .get((req,res,next) => {
     const knexInstance = req.app.get('db');
-    noteService.getAllNotes(knexInstance)
+    notesService.getAllNotes(knexInstance)
       .then(notes => {
         res.json(notes.map(note => serializeNote(note)));
       })
       .catch(next);
   })
   .post(bodyParser, (req,res,next) =>{
-    const { name, modified, folder_id, content } = req.body;
-    const newNote = { name, modified, folder_id, content}; 
+    const { name, content } = req.body;
+    const newNote = { name, content, id: uniqid()}; 
     notesService.insertNote(
       req.app.get('db'),
       newNote
@@ -72,14 +73,14 @@ noteRouter
       .catch(next);
   })
   .patch(bodyParser, (req, res, next) => {
-    const { name, modified, folder_id, content } = req.body;
-    const noteToUpdate = { name, modified, folder_id, content };
+    const { name, content } = req.body;
+    const noteToUpdate = { name, content };
 
     const numberOfValues = Object.values(noteToUpdate).filter(Boolean).length;
     if (numberOfValues === 0) {
       return res.status(400).json({
         error: {
-          message: 'request body must contain either \'name\', \'modified\', \'folder_id\', or \'content\''
+          message: 'request body must contain either \'name\', or \'content\''
         }
       });
     }

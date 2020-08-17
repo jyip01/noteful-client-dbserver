@@ -8,16 +8,12 @@ const logger = require('../logger');
 const foldersService = require('./foldersService');
 const xss = require('xss');
 
+var uniqid = require('uniqid');
+
 const serializeFolder = folder => ({
   id: xss(folder.id),
   name: xss(folder.name)
 });
-
-/*const serializeNote = note => ({
-  ...note,
-  name: xss(note.name),
-  content: xss(note.content)
-});*/
 
 folderRouter
   .route('/api/folders')
@@ -31,9 +27,10 @@ folderRouter
         next(err)
      })
   })
-  .post(bodyParser, (req,res,next) =>{
+  .post((req,res,next) =>{
     const {name} = req.body;
-    const newFolder = { name};
+    console.log(req.body, "body is something")
+    const newFolder = { name, id: uniqid()};
     foldersService.insertFolder(
       req.app.get('db'),
       newFolder

@@ -31,10 +31,6 @@ const foldersService = {
       .where({id })
       .update(newName);
   },
-  /*getFolderNotes(knex,id){
-    return knex('notes')
-      .where({folder_id: id});
-  }*/
 };
 
 module.exports = foldersService;
