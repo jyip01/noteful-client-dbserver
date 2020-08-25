@@ -1,8 +1,8 @@
-'use strict';
 require('dotenv').config();
 
 module.exports = {
-  "migrationDirectory": "migrations",
+  "migrationsDirectory": "migrations",
   "driver": "pg",
   "connectionString": process.env.DATABASE_URL
-};
+    
+}

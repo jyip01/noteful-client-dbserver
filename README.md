@@ -1,31 +1,26 @@
-## Noteful JSON Server
+# Express Boilerplate!
 
-This is a project for education purposes created by Thinkful.
+This is a boilerplate project used for starting new projects!
 
-This is a json-server managed API meant for developing `noteful-client` projects.
+## Set up
 
-Once started, this will run a local API server on `http://localhost:9000`.
+Complete the following steps to start a new project (NEW-PROJECT-NAME):
 
-If you navigate to the base URL there will be a HTML documentation page displayed.
+1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
+2. `cd` into the cloned repository
+3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
+4. Install the node dependencies `npm install`
+5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
+6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
 
-There are two top level endpoints:
+## Scripts
 
-- /folders
-- /notes
+Start the application `npm start`
 
-Both support GET, POST, PUT, PATCH and DELETE requests. For PUT, PATCH and DELETE requests you must supply the respective id in the endpoint's path.
+Start nodemon for the application `npm run dev`
 
-For example:
+Run the tests `npm test`
 
-- GET /notes
-- GET /folders
-- POST /notes
-- POST /folders
-- PATCH /notes/{note-id}/
-- PATCH /folders/{folder-id}/
-- DELETE /notes/{note-id}/
-- DELETE /folders/{folder-id}/
+## Deploying
 
-To start the server, run `npm start`.
-
-The database is initiated from the `db.js` file whenever the server is started. No data is persisted after the server has been shut down.
+When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
