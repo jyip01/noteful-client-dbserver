@@ -1,5 +1,5 @@
 {
-  "name": "noteful-json-server",
+  "name": "noteful-client-dbserver",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
