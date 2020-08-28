@@ -1,1 +1,1 @@
-drop table notes;
+DROP TABLE notes;

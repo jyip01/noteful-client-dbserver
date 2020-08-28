@@ -1,14 +1,14 @@
 'use strict';
 
 const express = require('express');
-
 const folderRouter = express.Router();
 const bodyParser = express.json();
+const uuid = require('uuid');
 const logger = require('../logger');
 const foldersService = require('./foldersService');
 const xss = require('xss');
 
-var uniqid = require('uniqid');
+//var uniqid = require('uniqid');
 
 const serializeFolder = folder => ({
   id: xss(folder.id),
@@ -29,8 +29,12 @@ folderRouter
   })
   .post((req,res,next) =>{
     const {name} = req.body;
-    console.log(req.body, "body is something")
-    const newFolder = { name, id: uniqid()};
+    console.log(req.body, "Folder body is something")
+    const newFolder = { name };
+
+    newFolder.id = uuid();
+    newFolder.name = xss(newFolder.name);
+
     foldersService.insertFolder(
       req.app.get('db'),
       newFolder
@@ -43,6 +47,8 @@ folderRouter
       })
       .catch(next);
   });
+
+
 folderRouter  
   .route('/api/folder/:id')
   .all((req,res,next)=>{

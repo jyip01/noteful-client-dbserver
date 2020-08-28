@@ -1,40 +1,35 @@
 {
-  "name": "shop-later-serverapp",
-  "version": "1.0.0",
+  "name": "noteful-json-server",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "globals": {
-    "supertest": true,
-    "expect": true
-  },
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "predeploy": "npm audit && npm run migrate",
-    "deploy": "git push heroku master",
     "migrate": "postgrator --config postgrator-config.js",
     "migrate:test": "env NODE_ENV=test npm run migrate",
-    "migrate:production": "heroku run npm run migrate"
+    "migrate:production": "heroku run npm run migrate",
+    "start": "node src/server.js",
+    "deploy": "git push heroku master",
+    "postdeploy": "npm run migrate:production"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "helmet": "^3.23.3",
-    "knex": "^0.21.5",
-    "morgan": "^1.10.0",
-    "pg": "^8.3.3",
-    "xss": "^1.0.8"
-  },
-  "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^8.1.1",
-    "nodemon": "^2.0.4",
-    "postgrator-cli": "^4.0.0",
-    "supertest": "^4.0.2"
+    "cors": "^2.8.5",
+    "dotenv": "^7.0.0",
+    "faker": "^4.1.0",
+    "helmet": "^4.0.0",
+    "json-server": "^0.16.1",
+    "knex": "^0.16.5",
+    "morgan": "^1.9.1",
+    "pg": "^7.18.2",
+    "postgrator": "^3.2.0",
+    "postgrator-cli": "^3.2.0",
+    "supertest": "^4.0.2",
+    "uniqid": "^5.2.0",
+    "uuid": "^8.3.0",
+    "uuidv4": "^6.2.3",
+    "winston": "^3.2.1",
+    "xss": "^1.0.8"
   }
 }
