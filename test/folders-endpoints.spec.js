@@ -18,9 +18,9 @@ describe('folders endpoints',function(){
     
     after('disconnect from db', () => db.destroy())
 
-    before('clean the table', () => db.raw('TRUNCATE lists, folders'))
+    before('clean the table', () => db.raw('TRUNCATE notes, folders'))
 
-    afterEach('cleanup',() => db.raw('TRUNCATE lists, folders'))
+    afterEach('cleanup',() => db.raw('TRUNCATE notes, folders'))
 
     describe(`GET /api/folders`,()=>{
 

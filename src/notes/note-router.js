@@ -1,42 +1,65 @@
-'use strict';
-
+const path = require('path');
 const express = require('express');
 const noteRouter = express.Router();
-const bodyParser = express.json();
-const logger = require('../logger');
+//const bodyParser = express.json();
 const notesService = require('./notesService');
 const xss = require('xss');
+const jsonParser = express.json();
 
-var uniqid = require('uniqid');
+//var uniqid = require('uniqid');
 
 const serializeNote = note => ({
-  id: xss(note.id),
+  id: note.id,
   name: xss(note.name),
-  modified: xss(note.modified),
-  folderId: xss(note.folder_id),
+  modified: note.modified,
+  folderId: note.folder_id,
   content: xss(note.content)
 });
 
 noteRouter
-  .route('/api/notes')
+  .route('/')
   .get((req,res,next) => {
-    const knexInstance = req.app.get('db');
-    notesService.getAllNotes(knexInstance)
-      .then(notes => {
-        res.json(notes.map(note => serializeNote(note)));
+    //const knexInstance = req.app.get('db');
+    notesService.getAllNotes(
+      req.app.get('db')
+    )
+      .then(notes=>{
+        res.json(notes.map(serializeNote))
       })
       .catch((err) => {
         next(err)
      })
   })
-  .post(bodyParser, (req,res,next) =>{
-    //different
-    const { name, folder_id, content } = req.body;
-    console.log(req.body, "List body is something")
-    const newNote = { name, folder_id, content}; 
 
-    newNote.name = xss(newNote.name);
-    newNote.content = xss(newNote.content);
+  .post(jsonParser, (req,res,next) =>{
+    //different
+    const {name,modified,folderid,content} = req.body
+    console.log(req.body, "List body is something")
+    const newNote = {name,modified,folderid,content}
+
+    //VALIDATION
+
+    //name is required
+    if(!newNote.name){
+      return res
+        .status(400)
+        .send({error: {message:`Missing 'name' in request body`}})
+    }
+
+    //content is required
+    if(!newNote.content){
+      return res
+        .status(400)
+        .send({error: {message:`Missing 'content' in request body`}})
+    }
+        
+    //folderid is required
+    if(!newNote.folderid){
+      return res
+        .status(400)
+        .send({error: {message:`Missing 'folderid' in request body`}})
+    }
+
     
     notesService.insertNote(
       req.app.get('db'),
@@ -51,7 +74,7 @@ noteRouter
       .catch(next);
   });
 noteRouter  
-  .route('/api/note/:id')
+  .route('/:note_id')
   .all((req,res,next)=>{
     notesService.getById(
       req.app.get('db'),
@@ -69,21 +92,23 @@ noteRouter
       .catch(next);
   })
 
-  //different
   .get((req,res,next) => {
-    return res.json(serializeNote(res.note));
+    res.json(serializeNote(res.note));
   })
   .delete((req,res,next)=>{
-    const { id } = req.params;
-    const knexInstance = req.app.get('db');
-    notesService.deleteNote(knexInstance,id)
+    //const { id } = req.params;
+    //const knexInstance = req.app.get('db');
+    notesService.deleteNote(
+      req.app.get('db'),
+        req.params.note_id
+    )
+
       .then(() => {
         res.status(204).end();
       })
       .catch(next);
   })
-  .patch(bodyParser, (req, res, next) => {
-    //different
+  .patch(jsonParser, (req, res, next) => {
     const { name, modified, folder_id, content } = req.body;
     const noteToUpdate = { name, modified, folder_id, content };
 
@@ -101,7 +126,7 @@ noteRouter
       req.params.id,
       noteToUpdate
     )
-      .then(() => {
+      .then(numRowsAffected => {
         res.status(204).end();
       })
       .catch(next);

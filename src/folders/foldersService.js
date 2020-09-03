@@ -1,5 +1,3 @@
-'use strict';
-
 const foldersService = {
   getAllFolders(knex) {
     return knex.select('*').from('folders');
@@ -10,14 +8,17 @@ const foldersService = {
       .insert(newFolder)
       .into('folders')
       .returning('*')
-      .then(rows => rows[0]);
+      .then(rows =>{
+        return rows[0];
+      })
   },
 
   getById(knex, id) {
     return knex
       .from('folders')
       .select('*')
-      .where('id', id).first();
+      .where('id', id)
+      .first();
   },
 
   deleteFolder(knex, id) {
@@ -26,11 +27,11 @@ const foldersService = {
       .delete();
   },
 
-  updateFolder(knex, id, newName) {
+  updateFolder(knex, id, newFolderField) {
     return knex('folders')
       .where({id })
-      .update(newName);
-  },
+      .update(newFolderField);
+  }
 };
 
 module.exports = foldersService;

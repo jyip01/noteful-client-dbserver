@@ -33,4 +33,4 @@ function makeMaliciousFolder(){
 module.exports = {
     makeFoldersArray,
     makeMaliciousFolder
-}
+};
